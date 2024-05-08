@@ -53,7 +53,7 @@ postgresql:
   #
   connection:
     host: 192.168.7.5
-    port: 31247
+    port: 30686
 
   ## Database auth details.
   #
@@ -101,8 +101,9 @@ postgresql:
     ## Database root password.
     #
     postgresPassword:
-      secretName: postgres.openproject.credentials.postgresql.acid.zalan.do
-      key: password
+      secret:
+        name: postgres.openproject.credentials.postgresql.acid.zalan.do
+        key: password
 
 
 # s3:
