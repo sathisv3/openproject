@@ -51,9 +51,22 @@ postgresql:
   bundled: false
   ## When "bundled" is set to false, you need to define the database connection details.
   #
+
+  global:
+    containerSecurityContext:
+      enabled: true
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+          - "ALL"
+      seccompProfile:
+        type: "RuntimeDefault"
+      readOnlyRootFilesystem: true
+      runAsNonRoot: true
+
   connection:
     host: 192.168.7.5
-    port: 30686
+    port: 31377
 
   ## Database auth details.
   #
@@ -72,13 +85,13 @@ postgresql:
     ## kubectl get secret -n <namespace> openproject-postgresql -o yaml | grep password
     ## ```
     #
-    existingSecret: ""
+    # existingSecret: ""
 
     ## In case your secret does not use the default keys in the secret, you can adjust them here.
     ##
-    ## secretKeys:
-    ##   adminPasswordKey: "postgres-password"
-    ##   userPasswordKey: "password"
+    secretKeys:
+      adminPasswordKey: "postgres-password"
+      userPasswordKey: "password"
 
     ## Database username.
     #
