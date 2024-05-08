@@ -1,0 +1,144 @@
+ingress:
+  enabled: true
+  ## Define the name of the ingress class.
+  ## If left empty, the cluster default is used.
+  ## Set this if you need a specific class, for instance `nginx`.
+  ingressClassName: traefik
+
+  ## Define custom ingress annotations:
+  ## Example:
+  ## annotations:
+  ##   nginx.ingress.kubernetes.io/rewrite-target: /
+  annotations:
+    cert-manager.io/issuer: letsencrypt-prod
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    traefik.ingress.kubernetes.io/router.tls: "true"
+
+  ## Define the Fully Qualified Domain Name (FQDN) where OpenProject should be reachable.
+  #
+  host: "openproject.internal.v3analytics.in"
+
+  ## Define the path for OpenProject on your host.
+  #
+  path: /
+
+  ## Each path in an Ingress is required to have a corresponding path type. Paths that do not include an explicit
+  ## pathType will fail validation. There are three supported path types:
+  ##
+  ## "ImplementationSpecific" => With this path type, matching is up to the IngressClass. Implementations can treat this
+  ##                             as a separate pathType or treat it identically to Prefix or Exact path types.
+  ## "Exact" => Matches the URL path exactly and with case sensitivity.
+  ## "Prefix" => Matches based on a URL path prefix split by /.
+  ##
+  ## Ref.: https://kubernetes.io/docs/concepts/services-networking/ingress/#path-types
+  #
+  pathType: "Prefix"
+  tls:
+    ## Whether to enable tls or not.
+    #
+    enabled: true
+    secretName: cloudflare-token-common
+
+
+persistence:
+  accessModes:
+    - "ReadWriteOnce"
+
+postgresql:
+  ## When set to true, a postgres server will be deployed into current namespace, when false you have to provide your
+  ## own database instance.
+  #
+  bundled: false
+  ## When "bundled" is set to false, you need to define the database connection details.
+  #
+  connection:
+    host: 192.168.7.5
+    port: 31247
+
+  ## Database auth details.
+  #
+  auth:
+    ## To avoid having sensitive credentials in your values.yaml, the preferred way to provide a password
+    ## is to use an existing secret containing the PostgreSQL credentials.
+    ## Specify the name of this existing secret here.
+    ##
+    ## If neither an existing secret nor passwords are defined, a secret is generated automatically.
+    ##
+    ## The postgresql chart will create this secret (the name of which ends with `-postgresql` by default)
+    ## with generated user and admin passwords.
+    ## If you want to see the base64 encoded passwords you can output the secret like this:
+    ##
+    ## ```
+    ## kubectl get secret -n <namespace> openproject-postgresql -o yaml | grep password
+    ## ```
+    #
+    existingSecret: ""
+
+    ## In case your secret does not use the default keys in the secret, you can adjust them here.
+    ##
+    ## secretKeys:
+    ##   adminPasswordKey: "postgres-password"
+    ##   userPasswordKey: "password"
+
+    ## Database username.
+    #
+    username: postgres
+
+    ## Database name.
+    #
+    database: openproject
+
+    ## If you are not using a Kubernetes secret to store your postgresql credentials,
+    ## you can specify them here if you really must. Please handle with care!
+
+    ## Database password.
+    #
+    password:
+      secret:
+        name: postgres.openproject.credentials.postgresql.acid.zalan.do
+        key: password
+
+    ## Database root password.
+    #
+    postgresPassword:
+      secretName: postgres.openproject.credentials.postgresql.acid.zalan.do
+      key: password
+
+
+# s3:
+#   enabled: true
+
+#   auth:
+#     # Provide the accessKeyId and secret in plain values
+#     # We recommend to use the existingSecret option instead
+#     accessKeyId: OWIcIme6gMjN8IRb9VaF
+#     secretAccessKey: 8V10vb7PN0Lg3yf1CI79bSWtHpsiCOFwvr1c0AeL
+
+#     ## To avoid having sensitive credentials in your values.yaml, the preferred way is to
+#     ## use an existing secret containing the S3 compatible access credentials.
+#     ## Specify the name of this existing secret here.
+#     existingSecret:
+
+#     ## In case your secret does not use the default keys in the secret, you can adjust them here.
+#     secretKeys:
+#       accessKeyId: "accessKeyId"
+#       secretAccessKey: "secretAccessKey"
+
+#   region: ap-south-1
+#   bucketName: postgres-backup
+
+#   ## Remove or leave empty to use default AWS S3 endpoint
+#   #
+#   endpoint: http://192.168.7.5:30192
+#   pathStyle: false
+#   signatureVersion: 4
+#   useIamProfile: false
+#   # Some providers do not properly support signature v4 streaming (e.g. Scaleway)
+#   enableSignatureV4Streaming: true
+
+#   ## If enabled, upload files directly to S3 from the browser instead of going through OpenProject.
+#   ## May not be supported by providers other than AWS S3 itself.
+#   ##
+#   ## Ref.: https://www.openproject.org/docs/installation-and-operations/configuration/#direct-uploads
+#   #
+#   directUploads: true
