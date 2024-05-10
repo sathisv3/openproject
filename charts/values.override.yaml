@@ -65,8 +65,8 @@ postgresql:
       runAsNonRoot: true
 
   connection:
-    host: 192.168.7.5
-    port: 30289
+    host: 10.43.72.157
+    port: 5432
 
   ## Database auth details.
   #
@@ -85,7 +85,11 @@ postgresql:
     ## kubectl get secret -n <namespace> openproject-postgresql -o yaml | grep password
     ## ```
     #
-    # existingSecret: ""
+    existingSecret: "postgres.openproject.credentials.postgresql.acid.zalan.do"
+    secretKeys:
+      # adminPasswordKey: "postgres-password"
+      userPasswordKey: "password"
+
 
     ## In case your secret does not use the default keys in the secret, you can adjust them here.
     ##
@@ -106,14 +110,14 @@ postgresql:
 
     ## Database password.
     #
-    password: hXb8rtMRGCFfgMyKDjKtY8T5LzZbTDWinvH8r6ZmApHfqNamgCVZziWH4mwS4twe
+    password: ""
       # secret:
       #   name: postgres.openproject.credentials.postgresql.acid.zalan.do
       #   key: password
 
     ## Database root password.
     #
-    postgresPassword: hXb8rtMRGCFfgMyKDjKtY8T5LzZbTDWinvH8r6ZmApHfqNamgCVZziWH4mwS4twe
+    postgresPassword: ""
       # secret:
       #   name: postgres.openproject.credentials.postgresql.acid.zalan.do
       #   key: password
