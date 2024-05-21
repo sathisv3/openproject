@@ -76,6 +76,9 @@ spec:
           command:
             - bash
             - /app/docker/prod/web
+          args:
+            - rm -f /app/tmp/pids/server.pid;
+              bundle exec puma -C config/puma.rb;
           volumeMounts:
             {{- include "openproject.tmpVolumeMounts" . | indent 12 }}
             {{- if .Values.persistence.enabled }}
