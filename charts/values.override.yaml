@@ -1,3 +1,6 @@
+image:
+  repository: "openproject/community"
+  tag: "13.4-slim"
 ingress:
   enabled: true
   ## Define the name of the ingress class.
@@ -123,40 +126,40 @@ postgresql:
       #   key: password
 
 
-# s3:
-#   enabled: true
+s3:
+  enabled: true
 
-#   auth:
-#     # Provide the accessKeyId and secret in plain values
-#     # We recommend to use the existingSecret option instead
-#     accessKeyId: OWIcIme6gMjN8IRb9VaF
-#     secretAccessKey: 8V10vb7PN0Lg3yf1CI79bSWtHpsiCOFwvr1c0AeL
+  auth:
+    # Provide the accessKeyId and secret in plain values
+    # We recommend to use the existingSecret option instead
+    accessKeyId: OWIcIme6gMjN8IRb9VaF
+    secretAccessKey: 8V10vb7PN0Lg3yf1CI79bSWtHpsiCOFwvr1c0AeL
 
-#     ## To avoid having sensitive credentials in your values.yaml, the preferred way is to
-#     ## use an existing secret containing the S3 compatible access credentials.
-#     ## Specify the name of this existing secret here.
-#     existingSecret:
+    ## To avoid having sensitive credentials in your values.yaml, the preferred way is to
+    ## use an existing secret containing the S3 compatible access credentials.
+    ## Specify the name of this existing secret here.
+    # existingSecret:
 
-#     ## In case your secret does not use the default keys in the secret, you can adjust them here.
-#     secretKeys:
-#       accessKeyId: "accessKeyId"
-#       secretAccessKey: "secretAccessKey"
+    # ## In case your secret does not use the default keys in the secret, you can adjust them here.
+    # secretKeys:
+    #   accessKeyId: "accessKeyId"
+    #   secretAccessKey: "secretAccessKey"
+  bucketName: postgres-backup
 
-#   region: ap-south-1
-#   bucketName: postgres-backup
+  ## Remove or leave empty to use default AWS S3 endpoint
+  #
+  endpoint: http://192.168.7.5:30192
+  pathStyle: false
+  signatureVersion: 4
+  useIamProfile: false
+  # Some providers do not properly support signature v4 streaming (e.g. Scaleway)
+  enableSignatureV4Streaming: true
 
-#   ## Remove or leave empty to use default AWS S3 endpoint
-#   #
-#   endpoint: http://192.168.7.5:30192
-#   pathStyle: false
-#   signatureVersion: 4
-#   useIamProfile: false
-#   # Some providers do not properly support signature v4 streaming (e.g. Scaleway)
-#   enableSignatureV4Streaming: true
+  ## If enabled, upload files directly to S3 from the browser instead of going through OpenProject.
+  ## May not be supported by providers other than AWS S3 itself.
+  ##
+  ## Ref.: https://www.openproject.org/docs/installation-and-operations/configuration/#direct-uploads
+  #
+  directUploads: true
 
-#   ## If enabled, upload files directly to S3 from the browser instead of going through OpenProject.
-#   ## May not be supported by providers other than AWS S3 itself.
-#   ##
-#   ## Ref.: https://www.openproject.org/docs/installation-and-operations/configuration/#direct-uploads
-#   #
-#   directUploads: true
+replicaCount: 2
